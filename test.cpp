@@ -1,7 +1,5 @@
 #include <GL/freeglut.h> 
-#include <stdlib.h> 
-
-#include <GL/glut.h>  // GLUT, include glu.h and gl.h
+#include <GL/glut.h>
  
 /* Handler for window-repaint event. Call back when the window first appears and
    whenever the window needs to be re-painted. */
@@ -11,7 +9,7 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	gluOrtho2D( 0.0, 500.0, 500.0,0.0 );
+	gluOrtho2D(0.0, 320, 320, 0);
 
 	glBegin(GL_POINTS);
  	  glColor3f(255, 0, 0);

@@ -130,6 +130,15 @@ struct Vector2D
         return Vector2D(this->x - rhs.x, this->y - rhs.y);
     }
 
+    Vector2D operator+(const float rhs)
+    {
+        return Vector2D(this->x + rhs, this->y + rhs);
+    }
+    Vector2D operator*(const float rhs)
+    {
+        return Vector2D(this->x * rhs, this->y * rhs);
+    }
+
     friend std::ostream &operator<<(std::ostream &output, const Vector2D &rhs)
     {
         output << "X : " << rhs.x << " Y : " << rhs.y << " Magnitude : " << rhs.magnitude();
