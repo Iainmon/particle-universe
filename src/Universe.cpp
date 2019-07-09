@@ -92,7 +92,7 @@ namespace Universe {
 
             void Step(float timestep){
                 ApplyForces(timestep);
-                ApplyVelocities(timestep);
+                MoveParticles(timestep);
             }
 
 
@@ -113,7 +113,7 @@ namespace Universe {
             }
 
 
-            void ApplyVelocities(float timestep){
+            void MoveParticles(float timestep){
                 for (int i = 0; i < particleHierarchy.size(); i++){
                     Particle currentParticle = particleHierarchy[i];
                     currentParticle.Move(timestep);
@@ -121,7 +121,7 @@ namespace Universe {
             }
 
 
-            Frame GetFrame(Stroke stroke){
+            void GetFrame(Stroke *stroke){
 
 
 
@@ -132,8 +132,7 @@ namespace Universe {
 
                 }
 
-                stroke.circle(10, 100, 10, BlAKV);
-                return stroke.frame;
+                stroke->circle(10, 100, 10, sf::Color::Black);
             }
     };
 
