@@ -329,17 +329,9 @@ namespace Universe {
                 particleHierarchy = vector<Particle>();
                 width = _width;
                 height = _height;
-            }
-
-            Universe Preset1(float _width, float _height){
-                particleHierarchy = vector<Particle>();
                 SpawnParticles(PresetParticleAttributes::Positive, 50, 10);
                 SpawnParticles(PresetParticleAttributes::Negative, 50, 10);
                 SpawnParticles(PresetParticleAttributes::Medium, 1000, 1);
-
-
-                width = _width;
-                height = _height;
             }
 
 
@@ -378,15 +370,15 @@ namespace Universe {
 
             void ApplyForces(float timestep){
                 for (int i = 0; i < particleHierarchy.size(); i++){
-                    Particle particleA = particleHierarchy[i];
+                    Particle* particleA = &particleHierarchy[i];
                     for (int j = i + 1; j < particleHierarchy.size(); j++){
-                        Particle particleB = particleHierarchy[j];
+                        Particle* particleB = &particleHierarchy[j];
 
-                        float force = GetChargeForce(particleA, particleB);
-                        Vector2D forceVector = (particleA.pos - particleB.pos).normalized() * force;
+                        float force = GetChargeForce(*particleA, *particleB);
+                        Vector2D forceVector = (particleA->pos - particleB->pos).normalized() * force;
 
-                        particleA.AddForce(forceVector, timestep);
-                        particleB.AddForce(-forceVector, timestep);
+                        particleA->AddForce(forceVector, timestep);
+                        particleB->AddForce(-forceVector, timestep);
                     }
                 }
             }
@@ -394,8 +386,8 @@ namespace Universe {
 
             void MoveParticles(float timestep){
                 for (int i = 0; i < particleHierarchy.size(); i++){
-                    Particle currentParticle = particleHierarchy[i];
-                    currentParticle.Move(timestep);
+                    Particle* currentParticle = &particleHierarchy[i];
+                    currentParticle->Move(timestep);
                 }
             }
 
@@ -407,12 +399,15 @@ namespace Universe {
 
 
             void GetFrame(Stroke *stroke){
+
+                stroke->background();
+                
                 Step(stroke->deltaTime);
 
                 for (int i = 0; i < particleHierarchy.size(); i++){
-                    Particle currentParticle = particleHierarchy[i];
-                    stroke->circle(currentParticle.pos.x, currentParticle.pos.y, 
-                                   currentParticle.attributes.radius, currentParticle.attributes.color);
+                    Particle* currentParticle = &particleHierarchy[i];
+                    stroke->circle(currentParticle->pos.x, currentParticle->pos.y, 
+                                   currentParticle->attributes.radius, currentParticle->attributes.color);
                 }                
             }
 

@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     gh = new graphics::GraphicHandler(new Universe::Universe(600.0f, 600.0f));
     gh->setup();
 
-    glutDisplayFunc(updateWrapper); // Register display callback handler for window re-paint
+    glutIdleFunc(updateWrapper); // Register display callback handler for window re-paint
     glutMainLoop();           // Enter the event-processing loop
     return 0;
 }
