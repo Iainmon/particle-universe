@@ -13,6 +13,16 @@ namespace graphics {
 
         sf::Color pixels[WIDTH][HEIGHT];
 
+        void clear() {
+            for (unsigned int x = 0; x < WIDTH; x++)
+            {
+                for (unsigned int y = 0; y < HEIGHT; y++)
+                {
+                    setPixel(x, y, sf::Color::Black);
+                }
+            }
+        }
+
         void setPixel(unsigned int x, unsigned int y, const sf::Color color) {
             pixels[x][y] = color;
         }
@@ -290,9 +300,8 @@ namespace graphics {
             sf::Clock clock;
             float framerate = 60.0f;
 
-            sf::Image image;
-            sf::Texture texture;
-            sf::Sprite sprite;
+            Frame* frame = new Frame();
+            Stroke stroke = Stroke(frame);
 
         public:
             GraphicHandler(/*Universe _universe*/) {
@@ -309,12 +318,12 @@ namespace graphics {
                 const unsigned int width = glutGet(GLUT_WINDOW_WIDTH);
                 const unsigned int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-                Frame frame;
-                frame.width = width;
-                frame.height = height;
+                frame->width = width;
+                frame->height = height;
 
-                Stroke stroke = Stroke(&frame);
-                //universe.Step(&stroke);
+                //universe.Step(stroke);
+
+                //frame->clear();
 
 
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque 
@@ -325,12 +334,14 @@ namespace graphics {
                 gluOrtho2D(0, width, height, 0);
 
                 glBegin(GL_POINTS);
+
                 for (unsigned int x = 0; x < width; x++)
                 {
                     for (unsigned int y = 0; y < height; y++)
                     {
-                        glColor3f(255, 255, 0);
-                        //glColor3f(frame.pixels[x, y].r, frame.pixels[x, y].g, frame.pixels[x, y].b);
+                        //glColor3f(255, 255, 0);
+                        const sf::Color pixel = frame->getPixel(x, y);
+                        glColor3f(pixel.r, pixel.g, pixel.b);
                         glVertex2i(x, y);
                     }
                 }
