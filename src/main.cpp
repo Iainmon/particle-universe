@@ -19,14 +19,12 @@
 #include "physics/Vector.cpp"
 #include "graphics/glDrawing.cpp"
 #include "Universe.cpp"
-#include "graphics/Graphics.cpp"
 
-graphics::GraphicHandler *gh;
+universe::Universe *uni;
 
-void updateWrapper()
-{
-    gh->loop();
-}
+unsigned long long lastUpdate;
+
+void render();
 
 int main(int argc, char **argv)
 {
@@ -34,14 +32,37 @@ int main(int argc, char **argv)
     glutCreateWindow("The Universe");
     glutInitWindowSize(WIDTH, HEIGHT);
     glutInitWindowPosition(50, 50);
-    
-    gh = new graphics::GraphicHandler(new universe::Universe(WIDTH, HEIGHT));
-    gh->setup();
 
-    glutIdleFunc(updateWrapper); // Register display callback handler for window re-paint
-    glutMainLoop();              // Enter the event-processing loop
+    uni = new universe::Universe(WIDTH, HEIGHT);
 
-    delete gh;
+    util::init();
+
+    lastUpdate = util::micros();
+
+    glutIdleFunc(render);
+    glutMainLoop();
 
     return 0;
+}
+
+void render()
+{
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutSetOption(GLUT_MULTISAMPLE, 8);
+    glEnable(GL_MULTISAMPLE);
+
+    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
+
+    const unsigned long long now = util::micros();
+    const float deltaTime = ((float)((now - lastUpdate) / 1000)) / 100;
+    lastUpdate = now;
+
+    uni->Draw(deltaTime);
+
+    glFlush();
 }
