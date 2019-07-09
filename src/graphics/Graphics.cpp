@@ -115,8 +115,9 @@ namespace graphics {
                 glEnd();
 
                 const std::clock_t now = std::clock();
-                stroke.deltaTime = float( now - lastTime );
+                stroke.deltaTime = 0.01f;//= float( now - lastTime );
                 lastTime = now;
+                std::cout << stroke.deltaTime << std::endl;
 
                 glFlush();  // Render now
             }

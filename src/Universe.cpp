@@ -329,17 +329,9 @@ namespace Universe {
                 particleHierarchy = vector<Particle>();
                 width = _width;
                 height = _height;
-            }
-
-            Universe Preset1(float _width, float _height){
-                particleHierarchy = vector<Particle>();
                 SpawnParticles(PresetParticleAttributes::Positive, 50, 10);
                 SpawnParticles(PresetParticleAttributes::Negative, 50, 10);
                 SpawnParticles(PresetParticleAttributes::Medium, 1000, 1);
-
-
-                width = _width;
-                height = _height;
             }
 
 
