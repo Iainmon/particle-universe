@@ -89,11 +89,13 @@ struct Vector2D
         return sqrt((x * x) + (y * y));
     }
 
-    void normalized()
+    Vector2D normalized()
     {
-        float temp = magnitude();
-        x /= temp;
-        y /= temp;
+        float mag = magnitude();
+        float nx = x / mag;
+        float ny = y / mag;
+
+        return Vector2D(nx, ny);
     }
 
     void flip() {
@@ -144,6 +146,10 @@ struct Vector2D
     Vector2D operator*(const float rhs)
     {
         return Vector2D(this->x * rhs, this->y * rhs);
+    }
+    Vector2D operator/(const float rhs)
+    {
+        return Vector2D(this->x / rhs, this->y / rhs);
     }
 
     friend std::ostream &operator<<(std::ostream &output, const Vector2D &rhs)

@@ -5,243 +5,6 @@
 
 namespace graphics {
 
-
-    struct Frame {
-        
-        unsigned int width = WIDTH;
-        unsigned int height = HEIGHT;
-
-        sf::Color pixels[WIDTH][HEIGHT];
-
-        void clear() {
-            for (unsigned int x = 0; x < WIDTH; x++)
-            {
-                for (unsigned int y = 0; y < HEIGHT; y++)
-                {
-                    setPixel(x, y, sf::Color::Black);
-                }
-            }
-        }
-
-        void setPixel(unsigned int x, unsigned int y, const sf::Color color) {
-            pixels[x][y] = color;
-        }
-        sf::Color getPixel(unsigned int x, unsigned int y) {
-            return pixels[x][y];
-        }
-    };
-
-    class Stroke {
-        private:
-
-            Frame *frame;
-
-            void drawCircle( int xc,  int yc,  int x,  int y, sf::Color color) {
-                dot(xc+x, yc+y, color);
-                dot(xc-x, yc+y, color);
-                dot(xc+x, yc-y, color);
-                dot(xc-x, yc-y, color);
-                dot(xc+y, yc+x, color);
-                dot(xc-y, yc+x, color);
-                dot(xc+y, yc-x, color);
-                dot(xc-y, yc-x, color);
-            }
-            
-        public:
-
-            float deltaTime = 0.0f;
-
-            Stroke(Frame *drawingFrame) {
-                this->frame = drawingFrame;
-            }
-            bool isInBounds(const int x, const int y) {
-                return ( x <= WIDTH && y <= HEIGHT && x >= 0 && y >= 0 );
-            }
-            void dot(const int x, const int y, sf::Color color) {
-                if (x < WIDTH && y < HEIGHT && x >= 0 && y >= 0) {
-                    this->frame->pixels[x][y] = color;
-                }
-            }
-            void unsafe_dot(const int x, const int y, sf::Color color) {
-                this->frame->pixels[x][y] = color;
-            }
-            sf::Color pix(const int x, const int y) {
-                if (x < WIDTH && y < HEIGHT && x >= 0 && y >= 0) {
-                    return this->frame->pixels[x][y];
-                }
-            }
-            sf::Color unsafe_pix(const int x, const int y) {
-                return this->frame->pixels[x][y];
-            }
-
-            void line( int x1, int y1, int x2, int y2, const sf::Color& color ){
-                // Bresenham's line algorithm
-                const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
-                if(steep)
-                {
-                    swap(x1, y1);
-                    swap(x2, y2);
-                }
-                
-                if(x1 > x2)
-                {
-                    swap(x1, x2);
-                    swap(y1, y2);
-                }
-                
-                const float dx = x2 - x1;
-                const float dy = fabs(y2 - y1);
-                
-                float error = dx / 2.0f;
-                const int ystep = (y1 < y2) ? 1 : -1;
-                int y = (int)y1;
-                
-                const int maxX = (int)x2;
-                
-                for(int x=(int)x1; x<maxX; x++)
-                {
-                    if(steep)
-                    {
-                        dot(y,x, color);
-                    }
-                    else
-                    {
-                        dot(x,y, color);
-                    }
-                
-                    error -= dy;
-                    if(error < 0)
-                    {
-                        y += ystep;
-                        error += dx;
-                    }
-                }
-            }
- 
-            void lr_line(const int x1, const int y1, const int x2, const int y2, sf::Color color) {
-                
-                const int dx = x2 - x1;
-                const int dy = y2 - y1;
-
-                int z1 = x1;
-                int z2 = x2;
-                int w1 = y1;
-                int w2 = y2;
-
-                if (dx < 0) {
-                    swap(z1, z2);
-                }
-                if (dy < 0) {
-                    swap(w1, w2);
-                }
-
-                unsigned_lr_line(z1, w1, z2, w2, color);
-
-            }
-            void ud_line(const int x1, const int y1, const int x2, const int y2, sf::Color color) {
-                
-                const int dx = x2 - x1;
-                const int dy = y2 - y1;
-
-                int z1 = x1;
-                int z2 = x2;
-                int w1 = y1;
-                int w2 = y2;
-
-                if (dx < 0) {
-                    swap(z1, z2);
-                }
-                if (dy < 0) {
-                    swap(w1, w2);
-                }
-
-                unsigned_ud_line(z1, w1, z2, w2, color);
-
-            }
-            void swap(int& x, int& y) {
-                int tmp = x;
-                x = y;
-                y = tmp;
-            }
-
-
-            void unsigned_ud_line(const int x1, const int y1, const int x2, const int y2, sf::Color color) {
-                
-                int dx = x2 - x1;
-                int dy = y2 - y1;
-                int D = 2 * dy - dx;
-                int x = x1;
-                
-                for (int y = y1; y <= y2; y++) {
-                    dot(x, y, color);
-
-                    if (D > 0) {
-                        x++;
-                        D -= dy * 2;
-                    }
-                    D += dx * 2;
-                }
-            }
-
-            void unsigned_lr_line(const int x1, const int y1, const int x2, const int y2, sf::Color color) {
-                
-                int dx = x2 - x1;
-                int dy = y2 - y1;
-                int D = 2 * dy - dx;
-                int y = y1;
-                
-                for (int x = x1; x <= x2; x++) {
-                    dot(x, y, color);
-
-                    if (D > 0) {
-                        y++;
-                        D -= dx * 2;
-                    }
-                    D += dy * 2;
-                }
-            }
-            void rect(const int x1, const int y1, const int x2, const int y2, sf::Color color) {
-                for (int x = x1; x < x2; x++) {
-                    for (int y = y1; y < y2; y++) {
-                        this->frame->pixels[x][y] = color;
-                    }
-                }
-            }
-            void background(sf::Color color = sf::Color::Black) {
-                for (unsigned int x = 0; x < WIDTH; x++) {
-                    for (unsigned int y = 0; y < HEIGHT; y++) {
-                        this->frame->pixels[x][y] = color;
-                    }
-                }
-            }
-            
-            void circle( int xc,  int yc,  int r, sf::Color color) 
-            {
-                 int x = 0, y = r;
-                 int d = 3 - 2 * r;
-                drawCircle(xc, yc, x, y, color);
-                while (y >= x)
-                {
-                    // for each pixel we will 
-                    // draw all eight pixels 
-                    
-                    x++; 
-            
-                    // check for decision parameter 
-                    // and correspondingly  
-                    // update d, x, y 
-                    if (d > 0) 
-                    { 
-                        y--;  
-                        d = d + 4 * (x - y) + 10; 
-                    } 
-                    else
-                        d = d + 4 * x + 6; 
-                    drawCircle(xc, yc, x, y, color); 
-                } 
-            }
-    };
-
     class Drawable {
 
         public:
@@ -304,10 +67,11 @@ namespace graphics {
             Stroke stroke = Stroke(frame);
 
             std::clock_t lastTime = std::clock();
+            Universe::Universe* universe;
 
         public:
-            GraphicHandler(/*Universe _universe*/) {
-                //universe = _universe;
+            GraphicHandler(Universe::Universe* _universe) {
+                universe = _universe;
             }
             void setup() {
                 const unsigned int width = glutGet(GLUT_WINDOW_WIDTH);
@@ -323,7 +87,7 @@ namespace graphics {
                 frame->width = width;
                 frame->height = height;
 
-                //universe.Step(stroke);
+                universe->GetFrame(&stroke);
 
                 //frame->clear();
 

@@ -14,10 +14,13 @@
 #include <SFML/Graphics.hpp>
 #include "util.cpp"
 #include "physics/Vector.cpp"
+#include "Universe.cpp"
 #include "graphics/Graphics.cpp"
-#include "drawables/Ball.cpp"
+
 
 graphics::GraphicHandler* gh;
+
+
 
 void updateWrapper() {
     gh->loop();
@@ -29,7 +32,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize(WIDTH, HEIGHT);   // Set the window's initial width & height
     glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
 
-    gh = new graphics::GraphicHandler();
+    gh = new graphics::GraphicHandler(new Universe::Universe(600.0f, 600.0f));
     gh->setup();
 
     glutDisplayFunc(updateWrapper); // Register display callback handler for window re-paint
