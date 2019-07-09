@@ -1,73 +1,6 @@
 namespace physics
 {
 
-struct Position
-{
-
-    float X, Y;
-
-    Position(float _x = 0.0f, float _y = 0.0f)
-    {
-        X = _x;
-        Y = _y;
-    }
-};
-
-struct Vector
-{
-
-    Position position;
-    Position dposition;
-
-    float velocity = 0.0f;
-
-    Vector(Position _position = Position(), Position _dposition = Position(), float _velocity = 0.0f)
-    {
-        position = _position;
-        dposition = _dposition;
-        velocity = _velocity;
-    }
-};
-
-void applyGravity(Vector *vector, float strength = 0.95f)
-{
-    (*vector).dposition.Y += strength;
-}
-void applyFrictionX(Vector *vector, float strength = 0.005f)
-{
-    if ((*vector).dposition.X != 0)
-    {
-        if ((*vector).dposition.X > 0)
-        {
-            (*vector).dposition.X -= strength;
-        }
-        else
-        {
-            (*vector).dposition.X += strength;
-        }
-    }
-}
-void applyFrictionY(Vector *vector, float strength = 0.005f)
-{
-    if ((*vector).dposition.Y != 0)
-    {
-        if ((*vector).dposition.Y > 0)
-        {
-            (*vector).dposition.Y -= strength;
-        }
-        else
-        {
-            (*vector).dposition.Y += strength;
-        }
-    }
-}
-
-void applyAirFriction(Vector *vector, float strength = 0.0005f)
-{
-    applyFrictionX(vector, strength);
-    applyFrictionY(vector, strength);
-}
-
 struct Vector2D
 {
 
@@ -194,32 +127,6 @@ struct Vector2D
     {
         x = rhs.x;
         y = rhs.y;
-    }
-};
-
-struct RigidBody2D {
-
-    Vector2D drag;
-    Vector2D gravity;
-
-    float bounce = 30;
-
-    RigidBody2D() {
-        drag = Vector2D(0.0f, 0.05f);
-        gravity = Vector2D(0.0f, 1.5f);
-        
-        bounce /= 100;
-    }
-};
-
-struct Transform2D
-{
-    Vector2D position;
-    Vector2D velocity;
-
-    Transform2D() {
-        position = Vector2D();
-        velocity = Vector2D();
     }
 };
 
