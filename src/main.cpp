@@ -16,14 +16,23 @@
 #include "graphics/Graphics.cpp"
 #include "drawables/Ball.cpp"
 
+graphics::GraphicHandler* gh;
 
-int main()
-{
+void updateWrapper() {
+    gh->loop();
+}
 
-    graphics::GraphicHandler gh = graphics::GraphicHandler();
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);                 // Initialize GLUT
+    glutCreateWindow("OpenGL Setup Test"); // Create a window with the given title
+    glutInitWindowSize(WIDTH, HEIGHT);   // Set the window's initial width & height
+    glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
 
-    gh.setup();
+    gh = new graphics::GraphicHandler();
+    gh->setup();
 
+    glutDisplayFunc(updateWrapper); // Register display callback handler for window re-paint
+    glutMainLoop();           // Enter the event-processing loop
     return 0;
 }
 

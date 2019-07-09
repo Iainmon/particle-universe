@@ -316,16 +316,6 @@ namespace graphics {
                 Stroke stroke = Stroke(&frame);
                 //universe.Step(&stroke);
 
-                for (unsigned int x = 0; x < width; x++)
-                {
-                    for (unsigned int y = 0; y < height; y++)
-                    {
-                        image.setPixel(x, y, frame.pixels[x][y]);
-                    }
-                }
-                texture.loadFromImage(image);
-                sprite.setTexture(texture);
-
 
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque 
 
@@ -339,7 +329,8 @@ namespace graphics {
                 {
                     for (unsigned int y = 0; y < height; y++)
                     {
-                        glColor3f(frame.pixels[x, y].r, frame.pixels[x, y].g, frame.pixels[x, y].b);
+                        glColor3f(255, 255, 0);
+                        //glColor3f(frame.pixels[x, y].r, frame.pixels[x, y].g, frame.pixels[x, y].b);
                         glVertex2i(x, y);
                     }
                 }
