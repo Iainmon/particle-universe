@@ -8,11 +8,15 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <math.h>
+#include <random>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "util.cpp"
 #include "physics/Vector.cpp"
 #include "graphics/Graphics.cpp"
 #include "drawables/Ball.cpp"
+
+
 
 
 int main()
@@ -62,6 +66,11 @@ int main()
     graphics::GraphicHandler gh(&window, processor, FPS);
     gh.setup();
     gh.loop();
+
+
+
+    
+
 
     return 0;
 }
