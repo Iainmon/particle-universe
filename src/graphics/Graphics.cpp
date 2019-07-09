@@ -38,6 +38,9 @@ namespace graphics {
             }
             
         public:
+
+            float deltaTime = 0.0f;
+
             Stroke(Frame *drawingFrame) {
                 this->frame = drawingFrame;
             }
@@ -292,94 +295,58 @@ namespace graphics {
             sf::Sprite sprite;
 
         public:
-            GraphicHandler(sf::RenderWindow *window, Processor _processor, float framerate) {
-
-                this->window = window;
-                processor = _processor;
-
-                this->window->setFramerateLimit(framerate);
-
-                framerate = framerate;
-                // sprite.setColor(sf::Color::Black);
-                // while (window->isOpen()) {
-                // window->draw(sprite);
-                // window->display();
-                // }
-
+            GraphicHandler(/*Universe _universe*/) {
+                //universe = _universe;
             }
             void setup() {
-                const unsigned int width = this->window->getSize().x;
-                const unsigned int height = this->window->getSize().y;
-                image.create(width, height, sf::Color::Yellow);
+                const unsigned int width = glutGet(GLUT_WINDOW_WIDTH);
+                const unsigned int height = glutGet(GLUT_WINDOW_HEIGHT);
                 util::init();
-                clock = sf::Clock(); // Re-Initializes clock
-                processor.setup(width, height);
             }
 
             void loop() {
 
-                const unsigned int width = this->window->getSize().x;
-                const unsigned int height = this->window->getSize().y;
+                const unsigned int width = glutGet(GLUT_WINDOW_WIDTH);
+                const unsigned int height = glutGet(GLUT_WINDOW_HEIGHT);
 
                 Frame frame;
-                sf::Event event;
-                while (this->window->isOpen()) {
-                    //Wait until 1/60th of a second has passed, then update everything.
-                    if (clock.getElapsedTime().asSeconds() >= 1.0f / framerate) {
+                frame.width = width;
+                frame.height = height;
 
-                        shouldUpdateFrame = !paused; // Should update frame
+                Stroke stroke = Stroke(&frame);
+                //universe.Step(&stroke);
 
-                        //circle.move(1.0f, 0);
-                        clock.restart();
-                    }
-
-                    // Handle the user's input
-                    while (this->window->pollEvent(event)) {
-                        if (event.type == sf::Event::Closed) {
-                            this->window->close();
-                        }
-
-                        #if DEBUG
-                            if (event.type == sf::Event::KeyPressed) {
-                                if (event.key.code == sf::Keyboard::Key::I) {
-                                    paused = true;
-                                    shouldUpdateFrame = true;
-                                } else {
-                                    paused = !paused;
-                                }
-                            }
-                            //if (event.type == sf::Event::KeyReleased) {
-                                //paused = false;
-                            //}
-                        #endif
-
-                    }
-                    //colorraw = true;
-                    //Draw stuff if ready
-
-                    //std::cout << "BROKE OUT -----------" << "\n";
-
-                    if (shouldUpdateFrame)
+                for (unsigned int x = 0; x < width; x++)
+                {
+                    for (unsigned int y = 0; y < height; y++)
                     {
-                        //colorraw = false;
-                        //this->window->clear(sf::Color(0, 0, 0));
-
-                        frame = processor.loop();
-
-                        for (unsigned int x = 0; x < width; x++)
-                        {
-                            for (unsigned int y = 0; y < height; y++)
-                            {
-                                image.setPixel(x, y, frame.pixels[x][y]);
-                            }
-                        }
-                        texture.loadFromImage(image);
-                        sprite.setTexture(texture);
-
-                        this->window->draw(sprite);
-                        this->window->display();
+                        image.setPixel(x, y, frame.pixels[x][y]);
                     }
                 }
+                texture.loadFromImage(image);
+                sprite.setTexture(texture);
+
+
+                glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque 
+
+                glClear( GL_COLOR_BUFFER_BIT );
+                glMatrixMode( GL_PROJECTION );
+                glLoadIdentity();
+                gluOrtho2D(0, width, height, 0);
+
+                glBegin(GL_POINTS);
+                for (unsigned int x = 0; x < width; x++)
+                {
+                    for (unsigned int y = 0; y < height; y++)
+                    {
+                        glColor3f(frame.pixels[x, y].r, frame.pixels[x, y].g, frame.pixels[x, y].b);
+                        glVertex2i(x, y);
+                    }
+                }
+
+                glEnd();
+            
+                glFlush();  // Render now
             }
 
     };

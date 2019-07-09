@@ -1,50 +1,31 @@
-#include <iostream>
-#include <stdio.h>
-#include <SFML/Window.hpp>
-#include <SFML/System/String.hpp>
-#include <SFML/OpenGL.hpp>
+#include <GL/freeglut.h> 
+#include <GL/glut.h>
+ 
+/* Handler for window-repaint event. Call back when the window first appears and
+   whenever the window needs to be re-painted. */
+void display() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque 
 
-int main()
-{
-    // create the window
-    sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
-    window.setVerticalSyncEnabled(true);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	gluOrtho2D(0.0, 320, 320, 0);
 
-    // activate the window
-    window.setActive(true);
-
-    // load resources, initialize the OpenGL states, ...
-
-    // run the main loop
-    bool running = true;
-    while (running)
-    {
-        // handle events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                // end the program
-                running = false;
-            }
-            else if (event.type == sf::Event::Resized)
-            {
-                // adjust the viewport when the window is resized
-                glViewport(0, 0, event.size.width, event.size.height);
-            }
-        }
-
-        // clear the buffers
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // draw...
-
-        // end the current frame (internally swaps the front and back buffers)
-        window.display();
-    }
-
-    // release resources...
-
+	glBegin(GL_POINTS);
+ 	  glColor3f(255, 0, 0);
+ 	  glVertex2i(10, 5);
+	glEnd();
+ 
+   	glFlush();  // Render now
+}
+ 
+/* Main function: GLUT runs as a console application starting at main()  */
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);                 // Initialize GLUT
+    glutCreateWindow("OpenGL Setup Test"); // Create a window with the given title
+    glutInitWindowSize(320, 320);   // Set the window's initial width & height
+    glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
+    glutDisplayFunc(display); // Register display callback handler for window re-paint
+    glutMainLoop();           // Enter the event-processing loop
     return 0;
 }
