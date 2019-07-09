@@ -89,6 +89,13 @@ struct Vector2D
         return sqrt((x * x) + (y * y));
     }
 
+    void normalized()
+    {
+        float temp = magnitude();
+        x /= temp;
+        y /= temp;
+    }
+
     void flip() {
         const float tmpY = y;
         y = x;

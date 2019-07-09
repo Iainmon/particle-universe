@@ -20,12 +20,30 @@ namespace Universe {
     }
 
 
+
     struct ParticleAttributes {
+        
         sf::Color color;
         float radius;
         float mass;
         float charge;
+
+        ParticleAttributes(sf::Color _color, float _radius, float _mass, float _charge){
+            color = _color;
+            radius = _radius;
+            mass = _mass;
+            charge = _charge;
+        }
     };
+
+
+
+    namespace PresetParticleAttributes {
+        ParticleAttributes Positive = ParticleAttributes(sf::Color::Red, 10, 1, 1);
+        ParticleAttributes Negative = ParticleAttributes(sf::Color::Blue, 3, 0.5, -1);
+        ParticleAttributes Medium = ParticleAttributes(sf::Color::Green, 1, 0.1, 0);
+    }
+    
 
 
     struct Particle {
@@ -50,12 +68,18 @@ namespace Universe {
     };
 
 
+    /* 
     struct ParticleSpawnData {
         ParticleAttributes attributes;
         int amount;
         float maxVel;
+        ParticleSpawnData(ParticleAttributes _attributes, int _amount, float _maxVel){
+            attributes = _attributes;
+            amount = _amount;
+            maxVel = _maxVel;
+        }
     };
-
+    */
 
 
     class Universe {
@@ -70,7 +94,32 @@ namespace Universe {
                 height = _height;
             }
 
+            Universe Preset1(float _width, float _height){
+                particleHierarchy = vector<Particle>();
+                SpawnParticles(PresetParticleAttributes::Positive, 50, 10);
+                SpawnParticles(PresetParticleAttributes::Negative, 50, 10);
+                SpawnParticles(PresetParticleAttributes::Medium, 1000, 1);
 
+
+                width = _width;
+                height = _height;
+            }
+
+
+            void SpawnParticles(ParticleAttributes attributes, int amount, float maxVel){
+                for(int j = 0; j < amount; j++){
+                    float randPX = ((double) rand() / (RAND_MAX)) * width;
+                    float randPY = ((double) rand() / (RAND_MAX)) * height;
+
+                    float randVX = maxVel * (((double) rand() / (RAND_MAX)) * 2 - 1);
+                    float randVY = maxVel * (((double) rand() / (RAND_MAX)) * 2 - 1);
+
+                    Particle newParticle = Particle(attributes, Vector2D(randPX, randPY), Vector2D(randVX, randVY));
+                    particleHierarchy.push_back(newParticle);
+                }
+            }
+
+            /* 
             void SpawnParticles(vector<ParticleSpawnData> spawnDataList){
                 for(int i = 0; i < spawnDataList.size(); i++){
                     
@@ -88,13 +137,7 @@ namespace Universe {
                     }
                 }
             }
-
-
-            void Step(float timestep){
-                ApplyForces(timestep);
-                MoveParticles(timestep);
-            }
-
+            */
 
             void ApplyForces(float timestep){
                 for (int i = 0; i < particleHierarchy.size(); i++){
@@ -103,11 +146,10 @@ namespace Universe {
                         Particle particleB = particleHierarchy[i];
 
                         float force = GetChargeForce(particleA, particleB);
-                        
-                        
+                        Vector2D forceVector = (particleA.pos - particleB.pos).normalized() * force;
 
-
-
+                        particleA.AddForce(forceVector, timestep);
+                        particleB.AddForce(-forceVector, timestep);
                     }
                 }
             }
@@ -121,18 +163,20 @@ namespace Universe {
             }
 
 
+            void Step(float timestep){
+                ApplyForces(timestep);
+                MoveParticles(timestep);
+            }
+
+
             void GetFrame(Stroke *stroke){
-
-
-
-
+                Step(stroke->deltaTime);
 
                 for (int i = 0; i < particleHierarchy.size(); i++){
                     Particle currentParticle = particleHierarchy[i];
-
-                }
-
-                stroke->circle(10, 100, 10, sf::Color::Black);
+                    stroke->circle(currentParticle.pos.x, currentParticle.pos.y, 
+                                   currentParticle.attributes.radius, currentParticle.attributes.color);
+                }                
             }
     };
 
