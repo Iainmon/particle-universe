@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <math.h>
+#include <ctime>
 #include <GL/freeglut.h> 
 #include <GL/glut.h>
 #include <SFML/Graphics.hpp>

@@ -303,6 +303,8 @@ namespace graphics {
             Frame* frame = new Frame();
             Stroke stroke = Stroke(frame);
 
+            std::clock_t lastTime = std::clock();
+
         public:
             GraphicHandler(/*Universe _universe*/) {
                 //universe = _universe;
@@ -347,7 +349,11 @@ namespace graphics {
                 }
 
                 glEnd();
-            
+
+                const std::clock_t now = std::clock();
+                stroke.deltaTime = float( now - lastTime );
+                lastTime = now;
+
                 glFlush();  // Render now
             }
 
