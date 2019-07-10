@@ -17,10 +17,9 @@
 #include "util.cpp"
 #include "physics/Vector.cpp"
 #include "graphics/glDrawing.cpp"
-#include "drawables/Drawable.cpp"
-#include "Universe.cpp"
+#include "drawables/NewUniverse.cpp"
 
-universe::Universe *uni;
+obiectum::DrawableController *dc;
 
 unsigned long long lastUpdate;
 
@@ -33,7 +32,7 @@ int main(int argc, char **argv)
     glutInitWindowPosition(50, 50);
     glutCreateWindow("The Universe");
 
-    uni = new universe::Universe(WIDTH, HEIGHT);
+    dc = new obiectum::DrawableController(WIDTH, HEIGHT);
 
     util::init();
 
