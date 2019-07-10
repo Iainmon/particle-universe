@@ -19,9 +19,7 @@
 #include "graphics/glDrawing.cpp"
 #include "drawables/NewUniverse.cpp"
 
-obiectum::DrawableController *dc;
-
-unsigned long long lastUpdate;
+obiectum::DrawableController dc;
 
 void render();
 
@@ -32,11 +30,11 @@ int main(int argc, char **argv)
     glutInitWindowPosition(50, 50);
     glutCreateWindow("The Universe");
 
-    dc = new obiectum::DrawableController(WIDTH, HEIGHT);
+    dc = obiectum::DrawableController();
+    obiectum::Drawable* drawable = new Universe(WIDTH, HEIGHT);
+    dc.addObject(drawable);
 
     util::init();
-
-    lastUpdate = util::micros();
 
     glutIdleFunc(render);
     glutMainLoop();
@@ -57,11 +55,7 @@ void render()
 
     gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
 
-    const unsigned long long now = util::micros();
-    const float deltaTime = ((float)((now - lastUpdate) / 1000000.0f));
-    lastUpdate = now;
-
-    uni->Draw(deltaTime);
+    dc.top_call();
 
     glFlush();
 }

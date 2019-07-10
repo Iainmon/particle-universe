@@ -118,6 +118,10 @@ public:
         SpawnParticles(PresetParticleAttributes::Medium, 3, 0);
     }
 
+    void Setup() override {
+        
+    }
+
     void SpawnParticles(ParticleAttributes attributes, int amount, float maxVel)
     {
         for (int j = 0; j < amount; j++)
@@ -219,14 +223,14 @@ public:
         }
     }
 
-    void Step(const float timestep)
+    void Step(const float timestep) override
     {
         ManageCollisions(timestep);
         ApplyForces(timestep);
         MoveParticles(timestep);
     }
 
-    void Draw(const float deltaTime)
+    void Draw() override
     {
         //stroke->background();
 

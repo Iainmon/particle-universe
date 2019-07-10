@@ -1,4 +1,4 @@
-#define TIME_DEBUG 1
+#define TIME_DEBUG 0
 
 #include <stdio.h>
 #include <iostream>
@@ -18,9 +18,6 @@ public:
 
     float zoom;
 
-    Drawable()
-    {
-    }
     void setPosition(const Vector2D _position)
     {
         position = _position;
@@ -30,9 +27,9 @@ public:
         velocity = _velocity;
     }
 
-    virtual void Setup(void);
-    virtual void Step(const float deltaTime);
-    virtual void Draw(void);
+    virtual void Setup(void) = 0;
+    virtual void Step(const float deltaTime) = 0;
+    virtual void Draw(void) = 0;
 };
 
 // DrawableController class
@@ -69,7 +66,7 @@ public:
             obiecta[i]->Step(deltaTime);
         }
         #if TIME_DEBUG
-        std::cout << "Physics update time was " << (util::micros() - prePhysicsUpdate) / 1000 << "ms." << std::endl;
+        std::cout << "Physics update time was " << (util::micros() - prePhysicsUpdate) << " microseconds." << std::endl;
 
         unsigned long long preDrawUpdate = util::micros();
         #endif
@@ -78,7 +75,7 @@ public:
             obiecta[i]->Draw();
         }
         #if TIME_DEBUG
-        std::cout << "Graphics draw time was " << (util::micros() - preDrawUpdate) / 1000 << "ms." << std::endl;
+        std::cout << "Graphics draw time was " << (util::micros() - preDrawUpdate) << " microseconds." << std::endl;
         #endif
     }
 
