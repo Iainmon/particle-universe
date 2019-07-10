@@ -44,27 +44,25 @@ class Particle : public Drawable
 
 public:
     ParticleAttributes attributes;
-    Vector2D pos;
-    Vector2D vel;
 
     Particle()
     {
         attributes = ParticleAttributes();
-        pos = Vector2D();
-        vel = Vector2D();
+        position = Vector2D();
+        velocity = Vector2D();
     }
 
-    Particle(ParticleAttributes _attributes, Vector2D _pos, Vector2D _vel)
+    Particle(const ParticleAttributes _attributes, const Vector2D _position, const Vector2D _velocity)
     {
         attributes = _attributes;
-        pos = _pos;
-        vel = _vel;
+        position = _position;
+        velocity = _velocity;
     }
 
-    void AddForce(Vector2D force, const float timestep)
+    void AddForce(Vector2D force, const float deltaTime)
     {
         Vector2D accel = force / attributes.mass;
-        vel += accel * timestep;
+        velocity += accel * deltaTime;
     }
 
     void Setup() override
@@ -73,26 +71,26 @@ public:
 
     void Step(const float deltaTime) override
     {
-        pos += vel * deltaTime;
+        position += velocity * deltaTime;
     }
 
     void Draw() override
     {
-        glDrawing::fcircle(pos.x, pos.y, attributes.radius, attributes.color);
+        glDrawing::fcircle(position.x, position.y, attributes.radius, attributes.color);
     }
 };
 
 static float GetChargeForce(Particle *a, Particle *b)
 {
     float chargeCoef = 100;
-    float distance = (a->pos - b->pos).magnitude();
+    float distance = (a->position - b->position).magnitude();
     return (a->attributes.charge * b->attributes.charge * chargeCoef) / (distance);
 }
 
 static float GetGravForce(Particle *a, Particle *b)
 {
     float gravCoef = 1000;
-    float distance = (a->pos - b->pos).magnitude();
+    float distance = (a->position - b->position).magnitude();
     return -(a->attributes.mass * b->attributes.mass * gravCoef) / (distance);
 }
 
@@ -145,28 +143,28 @@ public:
             Particle *particleA = static_cast<Particle *>(particleHierarchy[i]);
             float radiusA = particleA->attributes.radius;
 
-            if (particleA->pos.x < radiusA)
+            if (particleA->position.x < radiusA)
             {
-                particleA->vel.x = -particleA->vel.x;
-                particleA->pos.x = radiusA;
+                particleA->velocity.x = -particleA->velocity.x;
+                particleA->position.x = radiusA;
             }
 
-            if (particleA->pos.x > width - radiusA)
+            if (particleA->position.x > width - radiusA)
             {
-                particleA->vel.x = -particleA->vel.x;
-                particleA->pos.x = width - radiusA;
+                particleA->velocity.x = -particleA->velocity.x;
+                particleA->position.x = width - radiusA;
             }
 
-            if (particleA->pos.y < radiusA)
+            if (particleA->position.y < radiusA)
             {
-                particleA->vel.y = -particleA->vel.y;
-                particleA->pos.y = radiusA;
+                particleA->velocity.y = -particleA->velocity.y;
+                particleA->position.y = radiusA;
             }
 
-            if (particleA->pos.y > height - radiusA)
+            if (particleA->position.y > height - radiusA)
             {
-                particleA->vel.y = -particleA->vel.y;
-                particleA->pos.y = height - radiusA;
+                particleA->velocity.y = -particleA->velocity.y;
+                particleA->position.y = height - radiusA;
             }
 
             for (int j = i + 1; j < particleHierarchy.size(); j++)
@@ -188,7 +186,7 @@ public:
                 float chargeForce = GetChargeForce(particleA, particleB);
                 float gravForce = GetGravForce(particleA, particleB);
 
-                Vector2D forceVector = (particleA->pos - particleB->pos).normalized();
+                Vector2D forceVector = (particleA->position - particleB->position).normalized();
                 forceVector = forceVector * (chargeForce + gravForce);
 
                 particleA->AddForce(forceVector, timestep);
