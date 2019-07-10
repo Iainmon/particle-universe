@@ -34,13 +34,15 @@ struct ParticleAttributes
 
 namespace PresetParticleAttributes
 {
-ParticleAttributes Positive = ParticleAttributes(glDrawing::colors::Red, 8, 100, 1);
-ParticleAttributes Negative = ParticleAttributes(glDrawing::colors::Blue, 2, 0.1, -1);
-ParticleAttributes Medium = ParticleAttributes(glDrawing::colors::Green, 20, 100, 0);
+const ParticleAttributes Positive = ParticleAttributes(glDrawing::colors::Red, 8, 100, 1);
+const ParticleAttributes Negative = ParticleAttributes(glDrawing::colors::Blue, 2, 0.1, -1);
+const ParticleAttributes Medium = ParticleAttributes(glDrawing::colors::Green, 20, 100, 0);
 } // namespace PresetParticleAttributes
 
-struct Particle
+class Particle : public Drawable
 {
+
+public:
     ParticleAttributes attributes;
     Vector2D pos;
     Vector2D vel;
@@ -59,151 +61,132 @@ struct Particle
         vel = _vel;
     }
 
-    void Move(float timestep)
-    {
-        pos += vel * timestep;
-    }
-
-    void AddForce(Vector2D force, float timestep)
+    void AddForce(Vector2D force, const float timestep)
     {
         Vector2D accel = force / attributes.mass;
         vel += accel * timestep;
     }
+
+    void Setup() override
+    {
+    }
+
+    void Step(const float deltaTime) override
+    {
+        pos += vel * deltaTime;
+    }
+
+    void Draw() override
+    {
+        glDrawing::fcircle(pos.x, pos.y, attributes.radius, attributes.color);
+    }
 };
 
-/* 
-    struct ParticleSpawnData {
-        ParticleAttributes attributes;
-        int amount;
-        float maxVel;
-        ParticleSpawnData(ParticleAttributes _attributes, int _amount, float _maxVel){
-            attributes = _attributes;
-            amount = _amount;
-            maxVel = _maxVel;
-        }
-    };
-    */
-
-static float GetChargeForce(Particle a, Particle b)
+static float GetChargeForce(Particle *a, Particle *b)
 {
     float chargeCoef = 100;
-    float distance = (a.pos - b.pos).magnitude();
-    return (a.attributes.charge * b.attributes.charge * chargeCoef) / (distance);
+    float distance = (a->pos - b->pos).magnitude();
+    return (a->attributes.charge * b->attributes.charge * chargeCoef) / (distance);
 }
 
-
-static float GetGravForce(Particle a, Particle b)
+static float GetGravForce(Particle *a, Particle *b)
 {
     float gravCoef = 1000;
-    float distance = (a.pos - b.pos).magnitude();
-    return -(a.attributes.mass * b.attributes.mass * gravCoef) / (distance);
+    float distance = (a->pos - b->pos).magnitude();
+    return -(a->attributes.mass * b->attributes.mass * gravCoef) / (distance);
 }
 
-
-
-class Universe: public Drawable
+class ParticleController : public Drawable
 {
-    vector<Particle> particleHierarchy;
+private:
     float width;
     float height;
 
 public:
-    Universe(float _width, float _height)
+    std::vector<Drawable *> particleHierarchy;
+
+    ParticleController(const float _width, const float _height)
     {
-        particleHierarchy = vector<Particle>();
         width = _width;
         height = _height;
-        //SpawnParticles(PresetParticleAttributes::Positive, 100, 5);
-        //SpawnParticles(PresetParticleAttributes::Negative, 1000, 20);
-        SpawnParticles(PresetParticleAttributes::Medium, 3, 0);
+
+        std::vector<Drawable *> p, n, e;
+
+        p = spawnParticles(PresetParticleAttributes::Positive, 2, 0);
+        e = spawnParticles(PresetParticleAttributes::Negative, 2, 0);
+        n = spawnParticles(PresetParticleAttributes::Medium, 2, 0);
+
+        particleHierarchy.insert(particleHierarchy.end(), p.begin(), p.end());
+        particleHierarchy.insert(particleHierarchy.end(), e.begin(), e.end());
+        particleHierarchy.insert(particleHierarchy.end(), n.begin(), n.end());
     }
 
-    void Setup() override {
-        
-    }
-
-    void SpawnParticles(ParticleAttributes attributes, int amount, float maxVel)
+    void Setup() override
     {
-        for (int j = 0; j < amount; j++)
-        {
-            float randPX = ((double)rand() / (RAND_MAX)) * width;
-            float randPY = ((double)rand() / (RAND_MAX)) * height;
-
-            float randVX = maxVel * (((double)rand() / (RAND_MAX)) * 2 - 1);
-            float randVY = maxVel * (((double)rand() / (RAND_MAX)) * 2 - 1);
-
-            Particle newParticle = Particle(attributes, Vector2D(randPX, randPY), Vector2D(randVX, randVY));
-            particleHierarchy.push_back(newParticle);
-        }
     }
+    void Step(const float deltaTime) override
+    {
 
-    /* 
-            void SpawnParticles(vector<ParticleSpawnData> spawnDataList){
-                for(int i = 0; i < spawnDataList.size(); i++){
-                    
-                    ParticleSpawnData spawnData = spawnDataList[i];
+        Vector2D windowDimensions = glDrawing::getScreenSize();
+        width = (int)windowDimensions.x;
+        height = (int)windowDimensions.y;
 
-                    for(int j = 0; j < spawnData.amount; j++){
-                        float randPX = ((double) rand() / (RAND_MAX)) * width;
-                        float randPY = ((double) rand() / (RAND_MAX)) * height;
-
-                        float randVX = spawnData.maxVel * (((double) rand() / (RAND_MAX)) * 2 - 1);
-                        float randVY = spawnData.maxVel * (((double) rand() / (RAND_MAX)) * 2 - 1);
-
-                        Particle newParticle = Particle(spawnData.attributes, Vector2D(randPX, randPY), Vector2D(randVX, randVY));
-                        particleHierarchy.push_back(newParticle);
-                    }
-                }
-            }
-            */
+        ManageCollisions(deltaTime);
+        ApplyForces(deltaTime);
+    }
+    void Draw() override
+    {
+    }
 
     void ManageCollisions(const float timestep)
     {
         for (int i = 0; i < particleHierarchy.size(); i++)
         {
-            Particle *particleA = &particleHierarchy[i];
+            Particle *particleA = static_cast<Particle *>(particleHierarchy[i]);
             float radiusA = particleA->attributes.radius;
 
-            if(particleA->pos.x < radiusA){
+            if (particleA->pos.x < radiusA)
+            {
                 particleA->vel.x = -particleA->vel.x;
                 particleA->pos.x = radiusA;
             }
 
-            if(particleA->pos.x > width - radiusA){
+            if (particleA->pos.x > width - radiusA)
+            {
                 particleA->vel.x = -particleA->vel.x;
                 particleA->pos.x = width - radiusA;
             }
 
-            if(particleA->pos.y < radiusA){
+            if (particleA->pos.y < radiusA)
+            {
                 particleA->vel.y = -particleA->vel.y;
                 particleA->pos.y = radiusA;
             }
 
-            if(particleA->pos.y > height - radiusA){
+            if (particleA->pos.y > height - radiusA)
+            {
                 particleA->vel.y = -particleA->vel.y;
                 particleA->pos.y = height - radiusA;
             }
 
-            
             for (int j = i + 1; j < particleHierarchy.size(); j++)
             {
-                Particle *particleB = &particleHierarchy[j];
+                Particle *particleB = static_cast<Particle *>(particleHierarchy[j]);
             }
         }
     }
-
 
     void ApplyForces(const float timestep)
     {
         for (int i = 0; i < particleHierarchy.size(); i++)
         {
-            Particle *particleA = &particleHierarchy[i];
+            Particle *particleA = static_cast<Particle *>(particleHierarchy[i]);
             for (int j = i + 1; j < particleHierarchy.size(); j++)
             {
-                Particle *particleB = &particleHierarchy[j];
+                Particle *particleB = static_cast<Particle *>(particleHierarchy[j]);
 
-                float chargeForce = GetChargeForce(*particleA, *particleB);
-                float gravForce = GetGravForce(*particleA, *particleB);
+                float chargeForce = GetChargeForce(particleA, particleB);
+                float gravForce = GetGravForce(particleA, particleB);
 
                 Vector2D forceVector = (particleA->pos - particleB->pos).normalized();
                 forceVector = forceVector * (chargeForce + gravForce);
@@ -214,33 +197,23 @@ public:
         }
     }
 
-    void MoveParticles(const float timestep)
+    std::vector<Drawable *> spawnParticles(ParticleAttributes attributes, int amount, float maxVel)
     {
-        for (int i = 0; i < particleHierarchy.size(); i++)
+
+        std::vector<Drawable *> particleList;
+
+        for (int j = 0; j < amount; j++)
         {
-            Particle *currentParticle = &particleHierarchy[i];
-            currentParticle->Move(timestep);
+            float randPX = ((double)rand() / (RAND_MAX)) * width;
+            float randPY = ((double)rand() / (RAND_MAX)) * width;
+
+            float randVX = maxVel * (((double)rand() / (RAND_MAX)) * 2 - 1);
+            float randVY = maxVel * (((double)rand() / (RAND_MAX)) * 2 - 1);
+
+            Drawable *newParticle = new Particle(attributes, Vector2D(randPX, randPY), Vector2D(randVX, randVY));
+            particleList.push_back(newParticle);
         }
-    }
 
-    void Step(const float timestep) override
-    {
-        ManageCollisions(timestep);
-        ApplyForces(timestep);
-        MoveParticles(timestep);
-    }
-
-    void Draw() override
-    {
-        //stroke->background();
-
-        // Step(deltaTime);
-
-        for (int i = 0; i < particleHierarchy.size(); i++)
-        {
-            Particle *currentParticle = &particleHierarchy[i];
-            //stroke->circle(currentParticle->pos.x, currentParticle->pos.y, currentParticle->attributes.radius, currentParticle->attributes.color);
-            glDrawing::fcircle(currentParticle->pos.x, currentParticle->pos.y, currentParticle->attributes.radius, currentParticle->attributes.color);
-        }
+        return particleList;
     }
 };

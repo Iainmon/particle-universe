@@ -1,5 +1,5 @@
-#define WIDTH 500.0f
-#define HEIGHT 500.0f
+#define WIDTH 1000.0f
+#define HEIGHT 1000.0f
 #define FPS 30
 
 #define DEBUG 1
@@ -19,9 +19,10 @@
 #include "graphics/glDrawing.cpp"
 #include "drawables/NewUniverse.cpp"
 
-obiectum::DrawableController dc;
 
 void render();
+
+obiectum::DrawableController* dc;
 
 int main(int argc, char **argv)
 {
@@ -30,9 +31,10 @@ int main(int argc, char **argv)
     glutInitWindowPosition(50, 50);
     glutCreateWindow("The Universe");
 
-    dc = obiectum::DrawableController();
-    obiectum::Drawable* drawable = new Universe(WIDTH, HEIGHT);
-    dc.addObject(drawable);
+    dc = new obiectum::DrawableController();
+    ParticleController* particleController = new ParticleController(WIDTH, HEIGHT);
+    dc->addObject(particleController);
+    dc->addObjects(particleController->particleHierarchy);
 
     util::init();
 
@@ -55,7 +57,7 @@ void render()
 
     gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
 
-    dc.top_call();
+    dc->top_call();
 
     glFlush();
 }
