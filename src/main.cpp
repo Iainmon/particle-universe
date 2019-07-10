@@ -14,7 +14,6 @@
 #include <ctime>
 #include <GL/freeglut.h>
 #include <GL/glut.h>
-#include <SFML/Graphics.hpp>
 #include "util.cpp"
 #include "physics/Vector.cpp"
 #include "graphics/glDrawing.cpp"

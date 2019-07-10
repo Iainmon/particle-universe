@@ -1,7 +1,36 @@
 namespace glDrawing
 {
+struct Color {
 
-void fcircle(GLfloat x, GLfloat y, GLfloat radius, const sf::Color color = sf::Color::Cyan)
+   uint8_t r, g, b, a;
+
+   Color() {
+      r = 0;
+      g = 0;
+      b = 0;
+      a = 0;
+   }
+   Color(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255) {
+      r = _r;
+      g = _g;
+      b = _b;
+      a = _a;
+   }
+};
+namespace colors {
+   const Color Red =     Color(255, 0, 0);
+   const Color Green =   Color(0, 255, 0);
+   const Color Blue =    Color(0, 0, 255);
+
+   const Color Yellow =  Color(255, 255, 0);
+   const Color Magenta = Color(255, 0, 255);
+   const Color Cyan =    Color(0, 255, 255);
+
+   const Color Black =   Color(0, 0, 0);
+   const Color White =   Color(255, 255, 255);
+}
+
+void fcircle(GLfloat x, GLfloat y, GLfloat radius, const Color color = colors::Cyan)
 {
    int i;
    int triangleAmount = 20; //# of triangles used to draw circle
@@ -21,7 +50,7 @@ void fcircle(GLfloat x, GLfloat y, GLfloat radius, const sf::Color color = sf::C
    }
    glEnd();
 }
-void circle(float cx, float cy, float r, int num_segments, const sf::Color color = sf::Color::Cyan)
+void circle(float cx, float cy, float r, int num_segments, const Color color = colors::Cyan)
 {
 
    float theta = 2 * 3.1415926 / float(num_segments);
@@ -62,4 +91,6 @@ void circle(float cx, float cy, float r, int num_segments, const sf::Color color
 physics::Vector2D getScreenSize() {
    return physics::Vector2D(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 }
+
+
 } // namespace glDrawing
