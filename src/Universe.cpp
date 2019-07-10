@@ -5,7 +5,7 @@
 using namespace physics;
 using namespace std;
 
-//the library of the universe, an infinite one, a beuatiful one, it is gods kingdomn, nigerlisous
+
 namespace universe
 {
 
@@ -86,6 +86,15 @@ struct Particle
     };
     */
 
+static float GetChargeForce(Particle a, Particle b)
+{
+    float chargeCoef = 100;
+    float distance = (a.pos - b.pos).magnitude();
+    return (a.attributes.charge * b.attributes.charge * chargeCoef) / (distance);
+}
+
+
+
 class Universe
 {
     vector<Particle> particleHierarchy;
@@ -98,9 +107,9 @@ public:
         particleHierarchy = vector<Particle>();
         width = _width;
         height = _height;
-        SpawnParticles(PresetParticleAttributes::Positive, 50, 1);
-        SpawnParticles(PresetParticleAttributes::Negative, 100, 20);
-        //SpawnParticles(PresetParticleAttributes::Medium, 100, 1);
+        SpawnParticles(PresetParticleAttributes::Positive, 100, 5);
+        //SpawnParticles(PresetParticleAttributes::Negative, 1000, 20);
+        //SpawnParticles(PresetParticleAttributes::Medium, 500, 1);
     }
 
     void SpawnParticles(ParticleAttributes attributes, int amount, float maxVel)
@@ -184,15 +193,6 @@ public:
             //stroke->circle(currentParticle->pos.x, currentParticle->pos.y, currentParticle->attributes.radius, currentParticle->attributes.color);
             glDrawing::fcircle(currentParticle->pos.x, currentParticle->pos.y, currentParticle->attributes.radius, currentParticle->attributes.color);
         }
-    }
-
-    float GetChargeForce(Particle a, Particle b)
-    {
-        float chargeCoef = 10;
-        float aCharge = a.attributes.charge;
-        float bCharge = b.attributes.charge;
-        float distance = (a.pos - b.pos).magnitude();
-        return (aCharge * bCharge * chargeCoef) / (distance);
     }
 };
 
