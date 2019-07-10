@@ -28,9 +28,9 @@ void render();
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
-    glutCreateWindow("The Universe");
     glutInitWindowSize(WIDTH, HEIGHT);
     glutInitWindowPosition(50, 50);
+    glutCreateWindow("The Universe");
 
     uni = new universe::Universe(WIDTH, HEIGHT);
 
