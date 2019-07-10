@@ -17,6 +17,7 @@
 #include "util.cpp"
 #include "physics/Vector.cpp"
 #include "graphics/glDrawing.cpp"
+#include "Drawable.cpp"
 #include "Universe.cpp"
 
 universe::Universe *uni;
