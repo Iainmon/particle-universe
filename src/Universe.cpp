@@ -37,7 +37,7 @@ namespace PresetParticleAttributes
 {
 ParticleAttributes Positive = ParticleAttributes(glDrawing::colors::Red, 8, 100, 1);
 ParticleAttributes Negative = ParticleAttributes(glDrawing::colors::Blue, 2, 0.1, -1);
-ParticleAttributes Medium = ParticleAttributes(glDrawing::colors::Green, 16, 0.1, -0.1);
+ParticleAttributes Medium = ParticleAttributes(glDrawing::colors::Green, 20, 100, 0);
 } // namespace PresetParticleAttributes
 
 struct Particle
@@ -93,6 +93,14 @@ static float GetChargeForce(Particle a, Particle b)
 }
 
 
+static float GetGravForce(Particle a, Particle b)
+{
+    float gravCoef = 1000;
+    float distance = (a.pos - b.pos).magnitude();
+    return -(a.attributes.mass * b.attributes.mass * gravCoef) / (distance);
+}
+
+
 
 class Universe
 {
@@ -106,9 +114,9 @@ public:
         particleHierarchy = vector<Particle>();
         width = _width;
         height = _height;
-        SpawnParticles(PresetParticleAttributes::Positive, 100, 5);
+        //SpawnParticles(PresetParticleAttributes::Positive, 100, 5);
         //SpawnParticles(PresetParticleAttributes::Negative, 1000, 20);
-        //SpawnParticles(PresetParticleAttributes::Medium, 500, 1);
+        SpawnParticles(PresetParticleAttributes::Medium, 3, 0);
     }
 
     void SpawnParticles(ParticleAttributes attributes, int amount, float maxVel)
@@ -146,6 +154,42 @@ public:
             }
             */
 
+    void ManageCollisions(float timestep)
+    {
+        for (int i = 0; i < particleHierarchy.size(); i++)
+        {
+            Particle *particleA = &particleHierarchy[i];
+            float radiusA = particleA->attributes.radius;
+
+            if(particleA->pos.x < radiusA){
+                particleA->vel.x = -particleA->vel.x;
+                particleA->pos.x = radiusA;
+            }
+
+            if(particleA->pos.x > width - radiusA){
+                particleA->vel.x = -particleA->vel.x;
+                particleA->pos.x = width - radiusA;
+            }
+
+            if(particleA->pos.y < radiusA){
+                particleA->vel.y = -particleA->vel.y;
+                particleA->pos.y = radiusA;
+            }
+
+            if(particleA->pos.y > height - radiusA){
+                particleA->vel.y = -particleA->vel.y;
+                particleA->pos.y = height - radiusA;
+            }
+
+            
+            for (int j = i + 1; j < particleHierarchy.size(); j++)
+            {
+                Particle *particleB = &particleHierarchy[j];
+            }
+        }
+    }
+
+
     void ApplyForces(float timestep)
     {
         for (int i = 0; i < particleHierarchy.size(); i++)
@@ -155,8 +199,11 @@ public:
             {
                 Particle *particleB = &particleHierarchy[j];
 
-                float force = GetChargeForce(*particleA, *particleB);
-                Vector2D forceVector = (particleA->pos - particleB->pos).normalized() * force;
+                float chargeForce = GetChargeForce(*particleA, *particleB);
+                float gravForce = GetGravForce(*particleA, *particleB);
+
+                Vector2D forceVector = (particleA->pos - particleB->pos).normalized();
+                forceVector = forceVector * (chargeForce + gravForce);
 
                 particleA->AddForce(forceVector, timestep);
                 particleB->AddForce(-forceVector, timestep);
@@ -175,13 +222,13 @@ public:
 
     void Step(const float timestep)
     {
+        ManageCollisions(timestep);
         ApplyForces(timestep);
         MoveParticles(timestep);
     }
 
     void Draw(const float deltaTime)
     {
-
         //stroke->background();
 
         Step(deltaTime);
