@@ -1,5 +1,5 @@
-#define WIDTH 1500.0f
-#define HEIGHT 1500.0f
+#define WIDTH 500.0f
+#define HEIGHT 500.0f
 #define FPS 30
 
 #define DEBUG 1
@@ -59,7 +59,7 @@ void render()
     gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
 
     const unsigned long long now = util::micros();
-    const float deltaTime = ((float)((now - lastUpdate) / 1000)) / 100;
+    const float deltaTime = ((float)((now - lastUpdate) / 1000000.0f));
     lastUpdate = now;
 
     uni->Draw(deltaTime);
