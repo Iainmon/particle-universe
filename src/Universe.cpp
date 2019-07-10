@@ -12,20 +12,20 @@ namespace universe
 struct ParticleAttributes
 {
 
-    sf::Color color;
+    glDrawing::Color color;
     float radius;
     float mass;
     float charge;
 
     ParticleAttributes()
     {
-        color = sf::Color::White;
+        color = glDrawing::colors::White;
         radius = 1;
         mass = 1;
         charge = 1;
     }
 
-    ParticleAttributes(sf::Color _color, float _radius, float _mass, float _charge)
+    ParticleAttributes(glDrawing::Color _color, float _radius, float _mass, float _charge)
     {
         color = _color;
         radius = _radius;
@@ -36,9 +36,9 @@ struct ParticleAttributes
 
 namespace PresetParticleAttributes
 {
-ParticleAttributes Positive = ParticleAttributes(sf::Color::Red, 8, 100, 1);
-ParticleAttributes Negative = ParticleAttributes(sf::Color::Blue, 2, 0.1, -1);
-ParticleAttributes Medium = ParticleAttributes(sf::Color::Green, 16, 0.1, -0.1);
+ParticleAttributes Positive = ParticleAttributes(glDrawing::colors::Red, 8, 100, 1);
+ParticleAttributes Negative = ParticleAttributes(glDrawing::colors::Blue, 2, 0.1, -1);
+ParticleAttributes Medium = ParticleAttributes(glDrawing::colors::Green, 16, 0.1, -0.1);
 } // namespace PresetParticleAttributes
 
 struct Particle
