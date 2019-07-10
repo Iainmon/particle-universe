@@ -1,5 +1,5 @@
-#define WIDTH 500.0f
-#define HEIGHT 500.0f
+#define WIDTH 1000.0f
+#define HEIGHT 1000.0f
 #define FPS 30
 
 #define DEBUG 1
@@ -17,14 +17,12 @@
 #include "util.cpp"
 #include "physics/Vector.cpp"
 #include "graphics/glDrawing.cpp"
-#include "drawables/Drawable.cpp"
-#include "Universe.cpp"
+#include "drawables/NewUniverse.cpp"
 
-universe::Universe *uni;
-
-unsigned long long lastUpdate;
 
 void render();
+
+obiectum::DrawableController* dc;
 
 int main(int argc, char **argv)
 {
@@ -33,11 +31,12 @@ int main(int argc, char **argv)
     glutInitWindowPosition(50, 50);
     glutCreateWindow("The Universe");
 
-    uni = new universe::Universe(WIDTH, HEIGHT);
+    dc = new obiectum::DrawableController();
+    ParticleController* particleController = new ParticleController(WIDTH, HEIGHT);
+    dc->addObject(particleController);
+    dc->addObjects(particleController->particleHierarchy);
 
     util::init();
-
-    lastUpdate = util::micros();
 
     glutIdleFunc(render);
     glutMainLoop();
@@ -58,11 +57,7 @@ void render()
 
     gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
 
-    const unsigned long long now = util::micros();
-    const float deltaTime = ((float)((now - lastUpdate) / 1000000.0f));
-    lastUpdate = now;
-
-    uni->Draw(deltaTime);
+    dc->top_call();
 
     glFlush();
 }
