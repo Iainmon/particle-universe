@@ -41,6 +41,8 @@ class ExampleDrawable: public Drawable {
 
 // Example of instantiation
 
+#ifdef PROGRAM_SHOULD_NOT_COMPILE
+
 Drawable* ball = new ExampleDrawable();
 
 ball->setPosition(Vector2D(1, 1));
@@ -56,3 +58,5 @@ balls.push_back(new ExampleDrawable);
 for (int i = 0; i < balls.size(); i++) {
     balls[i]->Setup();
 }
+
+#endif
