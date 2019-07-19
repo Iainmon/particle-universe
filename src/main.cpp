@@ -12,8 +12,16 @@
 #include <math.h>
 #include <cmath>
 #include <ctime>
+
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGl/glu.h>
+#include <GLUT/glut.h>
+#else
 #include <GL/freeglut.h>
 #include <GL/glut.h>
+#endif
+
 #include "util.cpp"
 #include "physics/Vector.cpp"
 #include "graphics/glDrawing.cpp"
@@ -21,6 +29,10 @@
 
 
 void render();
+
+#if defined(__APPLE__)
+void displayFunc();
+#endif
 
 obiectum::DrawableController* dc;
 
@@ -38,6 +50,9 @@ int main(int argc, char **argv)
 
     util::init();
 
+    #if defined(__APPLE__)
+    glutDisplayFunc(displayFunc);
+    #endif
     glutIdleFunc(render);
     glutMainLoop();
 
@@ -52,7 +67,7 @@ void render()
     glLoadIdentity();
 
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
-    glutSetOption(GLUT_MULTISAMPLE, 8);
+    //glutSetOption(GLUT_MULTISAMPLE, 8);
     glEnable(GL_MULTISAMPLE);
 
     gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
@@ -61,3 +76,6 @@ void render()
 
     glFlush();
 }
+#if defined(__APPLE__)
+void displayFunc() {}
+#endif
