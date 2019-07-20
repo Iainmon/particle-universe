@@ -8,4 +8,17 @@ add_custom_target(run
     WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
 
-target_link_libraries(binary "-framework OpenGL" "-framework GLUT" "-framework Cocoa" "-framework Foundation")
+
+if(UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+elseif(UNIX AND APPLE)
+    set(APPLE TRUE)
+endif()
+
+if(LINUX)
+    link_directories(/usr/lib)
+    target_link_libraries(binary "-lGL" "-lGLU" "-lglut" "-lGLEW")
+elseif(APPLE)
+    target_link_libraries(binary "-framework OpenGL" "-framework GLUT" "-framework Cocoa" "-framework Foundation")
+endif()
+
