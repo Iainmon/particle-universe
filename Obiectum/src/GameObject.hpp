@@ -1,11 +1,9 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "Component.h"
 
 using namespace std;
 
@@ -23,6 +21,8 @@ namespace obiectum {
         GameObjectMetaData(string _name);
         GameObjectMetaData(string _name, string _type);
     };
+
+    class Component;
 
     class GameObject {
         private:
@@ -52,5 +52,3 @@ namespace obiectum {
         void updateComponents();
     };
 }
-
-#endif

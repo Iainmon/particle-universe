@@ -1,9 +1,9 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <vector>
+
 
 using namespace std;
 
@@ -14,19 +14,21 @@ namespace obiectum {
     };
 
 
+    class GameObject;
+
     class Component {
         private:
 
         GameObject* gameObject;
         bool isAssigned;
 
-        static float deltaTime;
-
         public:
 
-        virtual const string type;
+        static float deltaTime;
+
+        string type;
         
-        Component() {}
+        Component();
 
         Component(GameObject* _gameObject);
 
@@ -37,5 +39,3 @@ namespace obiectum {
         virtual void Update(void);
     };
 }
-
-#endif
