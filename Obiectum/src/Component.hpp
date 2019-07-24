@@ -17,7 +17,7 @@ namespace obiectum {
     class GameObject;
 
     class Component {
-        private:
+        protected:
 
         GameObject* gameObject;
         bool isAssigned;

@@ -6,18 +6,24 @@
 
 using namespace std;
 using namespace obiectum;
+using namespace physics;
 
 int main() {
 
     Hierarchy* h = new Hierarchy();
     
     GameObject* gm1 = new GameObject();
-        //Component* transform = new Transform(gm1);
-        //gm1->AddComponent(transform);
+        Component* transformComponent = new components::Transform();
+        transformComponent->Assign(gm1);
+        gm1->AddComponent(transformComponent);
+                components::Transform* transform = static_cast<components::Transform*>(transformComponent);
+                transform->position = Vector2D(1, 1);
 
     h->Add(gm1);
 
     h->updateAllGameObjects();
+
+
 
     return 0;
 }

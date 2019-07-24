@@ -8,6 +8,11 @@ add_library (obiectum
   GameObject.cpp
   Hierarchy.hpp
   Hierarchy.cpp
+  physics/Vector.hpp
+  physics/Vector.cpp
+  components/Components.hpp
+  components/RigidBody.cpp
+  components/Transform.cpp
   Obiectum.hpp)
 
 install (TARGETS obiectum DESTINATION bin)

@@ -1,35 +1,17 @@
 #include <iostream>
-#include <string>
-#include <vector>
-
-#include "../Component.cpp"
-#include "../physics/Vector.cpp"
+#include "../Obiectum.hpp"
+#include "Components.hpp"
 
 using namespace std;
 
-namespace obiectum {
-    namespace components {
+using namespace obiectum;
+using namespace components;
+using namespace physics;
 
-        using namespace physics;
+void Transform::Setup(void) {
+    
+}
 
-        class Transform: public Component {
-            private:
-
-            public:
-
-            const string type override = "Transform";
-
-            Vector2D position;
-            Vector2D velocity;
-
-            void Setup(void) override {
-                
-            }
-
-            void Update(void) override {
-                
-            }
-
-        }
-    }
+void Transform::Update(void) {
+    
 }
