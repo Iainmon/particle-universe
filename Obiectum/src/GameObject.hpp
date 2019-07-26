@@ -44,10 +44,17 @@ namespace obiectum {
 
         void AddComponent(Component* _component);
 
-        Component* GetComponentByType(string _type);
-
         template<class T>
-        T* GetComponentByType();
+        T* GetComponentByType() {
+            for (int i = 0; i < components.size(); i++)
+            {
+                if (dynamic_cast<T*>(components[i]) != nullptr)
+                {
+                    return dynamic_cast<T*>(components[i]);
+                }
+            }
+            return nullptr;
+        }
 
         void updateComponents();
     };

@@ -44,30 +44,9 @@ GameObject::GameObject(string _name, string _type) {
     Adds the new component to the array of components
 */
 void GameObject::AddComponent(Component* _component) {
-    //_component->Assign(this);
+    _component->Assign(this);
     components.push_back(_component);
 }
-
-Component* GameObject::GetComponentByType(string _type) {
-    for (int i = 0; i < components.size(); i++) {
-        if (components[i]->type == _type) {
-            return components[i];
-        }
-    }
-    throw ComponentMissingException();
-}
-
-template<class T>
-T* GameObject::GetComponentByType() {
-    for (int i = 0; i < components.size(); i++)
-    {
-        if (dynamic_cast<T*>(components[i]) != nullptr)
-        {
-            return dynamic_cast<T*>(components[i]);
-        }
-    }
-    return nullptr;
-} // RigidBody* rb = static_cast<Rigidbody>(gameObject.GetComponentByType<RigidBody>());
 
 void GameObject::updateComponents() {
     for (int i = 0; i < components.size(); i++) {
