@@ -58,16 +58,16 @@ Component* GameObject::GetComponentByType(string _type) {
 }
 
 template<class T>
-Component* GameObject::GetComponentByType() {
+T* GameObject::GetComponentByType() {
     for (int i = 0; i < components.size(); i++)
     {
         if (dynamic_cast<T*>(components[i]) != nullptr)
         {
-            return components[i];
+            return dynamic_cast<T*>(components[i]);
         }
     }
     return nullptr;
-} // RigidBody* rb = gameObject.GetComponentByType<RigidBody>();
+} // RigidBody* rb = static_cast<Rigidbody>(gameObject.GetComponentByType<RigidBody>());
 
 void GameObject::updateComponents() {
     for (int i = 0; i < components.size(); i++) {

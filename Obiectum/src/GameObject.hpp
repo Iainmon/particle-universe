@@ -47,7 +47,7 @@ namespace obiectum {
         Component* GetComponentByType(string _type);
 
         template<class T>
-        Component* GetComponentByType();
+        T* GetComponentByType();
 
         void updateComponents();
     };

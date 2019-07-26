@@ -18,6 +18,7 @@ int main() {
         gm1->AddComponent(transformComponent);
                 components::Transform* transform = static_cast<components::Transform*>(transformComponent);
                 transform->position = Vector2D(1, 1);
+                cout << transform->position.magnitude() << endl;
 
     h->Add(gm1);
 
