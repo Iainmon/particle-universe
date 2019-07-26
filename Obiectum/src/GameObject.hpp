@@ -45,7 +45,7 @@ namespace obiectum {
         void AddComponent(Component* _component);
 
         template<class T>
-        T* GetComponentByType() {
+        T* GetComponent() {
             for (int i = 0; i < components.size(); i++)
             {
                 if (dynamic_cast<T*>(components[i]) != nullptr)
@@ -53,7 +53,7 @@ namespace obiectum {
                     return dynamic_cast<T*>(components[i]);
                 }
             }
-            return nullptr;
+            throw ComponentMissingException();
         }
 
         void updateComponents();

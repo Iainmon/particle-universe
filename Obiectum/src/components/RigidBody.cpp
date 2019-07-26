@@ -10,7 +10,7 @@ using namespace physics;
 
 void RigidBody::Setup(void)
 {
-    transform = gameObject->GetComponentByType<Transform>();
+    transform = gameObject->GetComponent<Transform>();
 }
 
 void RigidBody::Update(void)

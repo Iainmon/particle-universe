@@ -15,7 +15,7 @@ int main()
     
     GameObject* gm1 = new GameObject();
         gm1->AddComponent(new components::Transform());
-        components::Transform* transform = gm1->GetComponentByType<components::Transform>();
+        components::Transform* transform = gm1->GetComponent<components::Transform>();
         transform->position = Vector2D(1, 1);
         cout << transform->position.magnitude() << endl;
 
