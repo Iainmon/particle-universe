@@ -25,8 +25,6 @@ namespace obiectum {
         public:
 
         static float deltaTime;
-
-        string type;
         
         Component();
 

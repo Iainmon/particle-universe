@@ -10,9 +10,12 @@ add_library (obiectum
   Hierarchy.cpp
   physics/Vector.hpp
   physics/Vector.cpp
+  physics/Color.hpp
+  physics/Color.cpp
   components/Components.hpp
   components/RigidBody.cpp
   components/Transform.cpp
+  components/Drawable.cpp
   Obiectum.hpp)
 
 install (TARGETS obiectum DESTINATION bin)

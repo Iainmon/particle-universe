@@ -16,9 +16,9 @@ namespace obiectum {
     class Hierarchy {
         private:
 
-        vector<GameObject *> gameObjects;
-
         unsigned long long lastTime;
+
+        static Hierarchy* hierarchy;
 
         void updateDeltaTime(void);
 
@@ -26,10 +26,19 @@ namespace obiectum {
 
         Hierarchy();
 
+        vector<GameObject *> gameObjects;
+
         void Add(GameObject* _gameObject);
 
         void AddObjects(vector<GameObject*> _gameObjects);
 
-        void updateAllGameObjects();
+        static void setupAllGameObjects();
+        static void updateAllGameObjects();
+
+        void RunMainLoop();
+
+        #if defined(__APPLE__)
+        void APPLE_displayFunction();
+        #endif
     };
 }

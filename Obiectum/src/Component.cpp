@@ -15,7 +15,7 @@ const char *AssignmentException::what() const throw()
 
 /*
     Constructors
-    */
+*/
 Component::Component()
 {
     isAssigned = false;
@@ -29,7 +29,7 @@ Component::Component(GameObject *_gameObject)
 
 /*
     Assigns the Component's parent GameObject
-    */
+*/
 void Component::Assign(GameObject *_gameObject)
 {
     if (!isAssigned)
@@ -45,7 +45,7 @@ void Component::Assign(GameObject *_gameObject)
 
 /*
     This function is called before the first draw time.
-    */
+*/
 void Component::Setup(void)
 {
 }
@@ -58,6 +58,6 @@ void Component::Update(void)
 }
 
 /*
-Initializes all static variables for this class.
+    Initializes all static variables for this class.
 */
 float Component::deltaTime = 0.0f;

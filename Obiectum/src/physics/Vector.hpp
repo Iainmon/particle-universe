@@ -5,8 +5,7 @@
 #include <cmath>
 
 namespace obiectum {
-namespace physics
-{
+namespace physics {
 
 struct Vector2D
 {
@@ -22,8 +21,8 @@ struct Vector2D
 
     void flip();
 
-    Vector2D& operator+=(const Vector2D &rhs);
-    Vector2D& operator-=(const Vector2D &rhs);
+    Vector2D &operator+=(const Vector2D &rhs);
+    Vector2D &operator-=(const Vector2D &rhs);
 
     Vector2D operator-();
     Vector2D operator+();
@@ -31,11 +30,12 @@ struct Vector2D
     Vector2D operator+(const Vector2D &rhs);
     Vector2D operator-(const Vector2D &rhs);
 
+    // Arythmatical Operators
     Vector2D operator+(const float rhs);
     Vector2D operator*(const float rhs);
     Vector2D operator/(const float rhs);
 
-    //friend std::ostream& operator<<(std::ostream&, const Vector2D &);
+    // Comparative Operators
     bool operator<(const Vector2D &rhs);
     bool operator>(const Vector2D &rhs);
     bool operator<=(const Vector2D &rhs);
@@ -45,6 +45,5 @@ struct Vector2D
 
     std::string info();
 };
-// std::ostream& operator<<(std::ostream& output, const Vector2D & rhs);
-}
-}
+} // namespace physics
+} // namespace obiectum
