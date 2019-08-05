@@ -21,7 +21,6 @@ bool Drawable::isSetup = false;
 void Drawable::fcircle(float x, float y, float radius, const Color color = Color::Cyan, const int triangles = 20)
 {
    int i;
-   int triangleAmount = triangles; //# of triangles used to draw circle
 
    //GLfloat radius = 0.8f; //radius
    GLfloat twicePi = 2.0f * M_PI;
@@ -30,11 +29,11 @@ void Drawable::fcircle(float x, float y, float radius, const Color color = Color
    glColor3f(color.r, color.g, color.b);
 
    glVertex2f(x, y); // center of circle
-   for (i = 0; i <= triangleAmount; i++)
+   for (i = 0; i <= triangles; i++)
    {
       glVertex2f(
-          x + (radius * cos(i * twicePi / triangleAmount)),
-          y + (radius * sin(i * twicePi / triangleAmount)));
+          x + (radius * cos(i * twicePi / triangles)),
+          y + (radius * sin(i * twicePi / triangles)));
    }
    glEnd();
 }

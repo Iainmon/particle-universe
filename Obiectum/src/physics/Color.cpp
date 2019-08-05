@@ -19,6 +19,18 @@ Color::Color(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255) {
     b = _b;
     a = _a;
 }
+Color::Color(uint8_t _r, uint8_t _g, uint8_t _b) {
+    r = _r;
+    g = _g;
+    b = _b;
+    a = 255;
+}
+Color::Color(int _r, int _g, int _b, int _a = 255) {
+    r = _r;
+    g = _g;
+    b = _b;
+    a = _a;
+}
 
 const Color Color::Red = Color(255, 0, 0);
 const Color Color::Green = Color(0, 255, 0);

@@ -16,6 +16,9 @@ namespace obiectum {
             Color();
 
             Color(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a);
+            Color(uint8_t _r, uint8_t _g, uint8_t _b);
+            Color(int _r, int _g, int _b, int _a);
+
             static const Color Red;
             static const Color Green;
             static const Color Blue;

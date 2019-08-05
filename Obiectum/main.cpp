@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 
         components::Transform* transform = gm1->GetComponent<components::Transform>();
         transform->position = Vector2D(1, 1);
-        transform->velocity = Vector2D(15, 15);
+        transform->velocity = Vector2D(30, 15);
         cout << transform->position.magnitude() << endl;
 
 

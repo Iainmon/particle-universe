@@ -18,5 +18,10 @@ add_library (obiectum
   components/Drawable.cpp
   Obiectum.hpp)
 
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
+target_link_libraries(obiectum ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} )
+
 install (TARGETS obiectum DESTINATION bin)
 install (FILES Obiectum.hpp DESTINATION include)
